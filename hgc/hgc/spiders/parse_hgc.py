@@ -33,7 +33,7 @@ def random_with_N_digits(n):
 
 
 class HGCSpider(scrapy.Spider):
-    name = "hgc"
+    name = "hgc_backup"
     allowed_domains = ['shop.hgc.ch']
     start_urls = ['https://shop.hgc.ch']
 
