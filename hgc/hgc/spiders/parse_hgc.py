@@ -71,7 +71,7 @@ class HGCSpider(scrapy.Spider):
 
     def parse(self, response):
 
-        for i in range(self.pages):
+        for i in range(self.pages + 1):
             start = i * self.rows
             params = {
                 'handler': 'search',
