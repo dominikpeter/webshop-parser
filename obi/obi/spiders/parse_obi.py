@@ -3,6 +3,9 @@ from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from scrapy.http import Request
 
+from obi.items import ObiItem
+
+
 
 class ParseObiSpider(CrawlSpider):
     name = 'obi'
@@ -33,4 +36,17 @@ class ParseObiSpider(CrawlSpider):
     )
 
     def parse_page(self, response):
-        yield {"url": response.url}
+        header = response.xpath("*//h1/text()").extract_first()
+        desc = response.xpath("//*[@class='no-margin']/text()").extract_first()
+        tbl = response.xpath("//*[contains(@class, 'c-datalist')]")
+        dt = tbl.xpath("./dt/text()").extract()
+        dd = tbl.xpath("./dd/text()").extract()
+        facts = dict(zip(dt, dd))
+
+        product = ObiItem()
+
+        product['header'] = header
+        product['description'] = desc
+        product['facts'] = facts
+
+        yield dict(product)
