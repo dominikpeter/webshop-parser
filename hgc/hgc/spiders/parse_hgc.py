@@ -68,10 +68,8 @@ class HGCSpider(scrapy.Spider):
         self.pages = math.ceil(self.number_of_items / self.rows)
         print(self.pages)
 
-    def parse(self, response):
-        pass
 
-    def tparse(self, response):
+    def parse(self, response):
 
         for i in range(self.pages):
             start = i * self.rows
