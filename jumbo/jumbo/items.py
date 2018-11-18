@@ -11,4 +11,6 @@ import scrapy
 class JumboItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    pass
+    header = scrapy.Field()
+    description = scrapy.Field()
+    details = scrapy.Field()
