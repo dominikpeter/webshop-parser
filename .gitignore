@@ -108,3 +108,8 @@ venv.bak/
 
 # own
 *.ipynb
+*.json
+*.xml
+*.xlsx
+*.xls
+*.xlsb
