@@ -11,4 +11,9 @@ import scrapy
 class BauhausItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    pass
+    head = scrapy.Field()
+    desc = scrapy.Field()
+    price = scrapy.Field()
+    cat = scrapy.Field()
+    url = scrapy.Field()
+    details = scrapy.Field()

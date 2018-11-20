@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
-
+from bauhaus.items import BauhausItem
 
 class BauhausSpider(CrawlSpider):
     name = "bauhaus"
@@ -32,8 +32,26 @@ class BauhausSpider(CrawlSpider):
         cat = response.xpath(
             "//*[contains(@class, 'breadcrumbs')]/li/a/text()").extract()
 
-        yield({"head": txt,
-               "desc": desc,
-               "price": price,
-               "cat": cat,
-               "url": response.url})
+        details = response.xpath(
+            "//*[@class='table']/tbody/tr/td/text()").extract()
+
+        try:
+            details_header =  [details[i] for i in range(0, len(details), 2)]
+            details_value = [details[i] for i in range(1, len(details)+1, 2)]
+
+            details = dict(zip(details_header,
+                               details_value))
+        except IndexError:
+            details = {}
+
+        product = BauhausItem()
+
+        product['head'] = txt
+        product['desc'] = desc
+        product['price'] = price
+        product['cat'] = cat
+        product['url'] = response.url
+        product['details'] = details
+
+
+        yield dict(product)

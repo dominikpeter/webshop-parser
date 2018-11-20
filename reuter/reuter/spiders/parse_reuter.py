@@ -1,7 +1,7 @@
 import scrapy
 import json
 from urllib.parse import urljoin
-
+from reuter.items import ReuterItem
 
 def save_extract(d, key):
     try:
@@ -54,10 +54,13 @@ class ProductsSpider(scrapy.Spider):
 
         attribute = dict(zip(attr, val))
 
-        yield {"supplier": supplier,
-               "header": header,
-               "price": price,
-               "attribute": attribute}
+        product = ReuterItem()
+        product['supplier'] = supplier
+        product['header'] = header
+        product['price'] = price
+        product['attribute'] = attribute
+
+        yield dict(product)
 
         ids = response.xpath(
             "//*[contains(@qa-data, 'product-model--list')]/li/@data-value")
@@ -93,7 +96,10 @@ class ProductsSpider(scrapy.Spider):
             for i, k in enumerate(detailsTop):
                 attribute['key_{}'.format(i)] = detailsTop[k]['value']
 
-        yield {"supplier": supplier,
-               "header": header,
-               "price": price,
-               "attribute": attribute}
+        product = ReuterItem()
+        product['supplier'] = supplier
+        product['header'] = header
+        product['price'] = price
+        product['attribute'] = attribute
+
+        yield dict(product)

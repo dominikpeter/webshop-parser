@@ -10,11 +10,17 @@ import os
 import re
 from functools import partial
 import datetime
+import tempfile
+import zipfile
 
 import numpy as np
 import pandas as pd
 from lxml import etree
 from tqdm import tqdm
+from urllib.parse import urljoin
+import requests
+from requests.exceptions import SSLError
+from scrapy import Selector
 
 import argparse
 import codecs
@@ -31,6 +37,24 @@ import numpy as np
 import pandas as pd
 import tqdm
 import turbodbc
+
+
+
+
+def get_catalogue_download_link(key):
+    url = 'https://www.igh.ch/de'
+    try:
+        response = requests.get(urljoin(url, "kataloge.html"))
+    except SSLError:
+        response = requests.get(urljoin(url, "kataloge.html"), verify=False)
+    selector = Selector(text=response.text)
+    hrefs = selector.xpath(
+        "//*[@class='sortable']/tbody/tr/td[2]/a/@href").extract()
+    hrefs = [urljoin(url, i) for i in hrefs]
+    company = selector.xpath(
+        "//*[@class='sortable']/tbody/tr/td[3]/text()").extract()
+    catalogue = dict(zip(company, hrefs))
+    return catalogue[key]
 
 
 def switch_to_right(c):
@@ -112,9 +136,9 @@ def findall_loop(element, tag, attrib=None):
 class XML_Parser:
     """XML Parser Class
     """
-    def __init__(self, tree):
+    def __init__(self, tree=None):
         self.tree = tree
-        self.dict_ = pp.rec_dd()
+        self.dict_ = rec_dd()
         self.cat_dict = {}
         self.attr_dict = {
             "Art_Nr_Anbieter": '', "Art_Nr_Hersteller": '',
@@ -130,6 +154,24 @@ class XML_Parser:
         }
         self.DF = pd.DataFrame()
         self.catDF = pd.DataFrame()
+        
+    def download_xml(self, url):
+        filename = url.split("/")[-1]
+        try:
+            response = requests.get(url)
+        except SSLError:
+            response = requests.get(url, verify=False)
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            with open(os.path.join(tmpdirname, filename), 'wb') as f:
+                f.write(response.content)
+
+            with zipfile.ZipFile(os.path.join(tmpdirname, filename),"r") as zip_ref:
+                zip_ref.extractall(tmpdirname)
+
+            xml_file = glob.glob(os.path.join(tmpdirname, "*.xml"))[0]
+            parser = etree.XMLParser()
+            self.tree = etree.parse(xml_file, parser=parser)
+    
 
     def update_dict(self, level1, level2, level3, key, value):
         try:

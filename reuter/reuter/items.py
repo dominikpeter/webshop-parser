@@ -11,4 +11,7 @@ import scrapy
 class ReuterItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    pass
+    supplier = scrapy.Field()
+    header = scrapy.Field()
+    price = scrapy.Field()
+    attribute = scrapy.Field()
