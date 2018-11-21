@@ -67,6 +67,7 @@ DOWNLOADER_MIDDLEWARES = {
 #DOWNLOADER_MIDDLEWARES = {
 #    'jumbo.middlewares.JumboDownloaderMiddleware': 543,
 #}
+AUTOTHROTTLE_ENABLED = True
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html

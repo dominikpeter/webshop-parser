@@ -74,6 +74,7 @@ DOWNLOADER_MIDDLEWARES = {
 #EXTENSIONS = {
 #    'scrapy.extensions.telnet.TelnetConsole': None,
 #}
+AUTOTHROTTLE_ENABLED = True
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
