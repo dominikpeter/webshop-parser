@@ -26,7 +26,7 @@ class HGCSpider(scrapy.Spider):
     def __init__(self):
 
         session = requests.Session()
-        resp = session.get('https://shop.hgc.ch')
+        resp = session.get('https://shop.hgc.ch', verify=False)
 
         self.cookies = session.cookies.get_dict()
         self.headers = {
@@ -45,7 +45,7 @@ class HGCSpider(scrapy.Spider):
         self.post_url = re.sub("dashboard.*", "details.ws?", resp.url)
         self.post_url = self.post_url + "event=GET_DETAILS&pitcher=search.htm&receiver="
         resp = session.get(self.url + urlencode(params),
-                           headers=self.headers)
+                           headers=self.headers, verify=False)
         self.cat_id = resp.json()['catalogues'][0]['id']
         self.rows = 50
 

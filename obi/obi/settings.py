@@ -1,5 +1,16 @@
 # -*- coding: utf-8 -*-
 
+# import os,sys,inspect
+# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+# parentdir = os.path.dirname(currentdir)
+# parentdir2 = os.path.dirname(parentdir)
+# sys.path.insert(0,parentdir2)
+#
+# from UserAgents.RandomAgent import RandomAgent
+#
+# ra = RandomAgent()
+
+
 # Scrapy settings for obi project
 #
 # For simplicity, this file contains only settings considered important or
@@ -16,7 +27,7 @@ NEWSPIDER_MODULE = 'obi.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'obi (+http://www.yourdomain.com)'
+# USER_AGENT = ra.get_random_agent()
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -27,7 +38,7 @@ ROBOTSTXT_OBEY = False
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 3
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -49,6 +60,10 @@ ROBOTSTXT_OBEY = False
 #SPIDER_MIDDLEWARES = {
 #    'obi.middlewares.ObiSpiderMiddleware': 543,
 #}
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
+    'scrapy_fake_useragent.middleware.RandomUserAgentMiddleware': 400,
+}
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html

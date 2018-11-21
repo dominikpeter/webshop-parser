@@ -69,14 +69,16 @@ def create_archiv(files):
         ).strftime("%Y%m%d_%H%M")
     for file in files:
         splitted = os.path.split(file)
+        filetype = splitted[-1].split(".")[-1]
         new_path = path_join_list(
             flatten([splitted[:-1],
                      "Archiv",
+                     filetype.upper(),
                      now +"_"+ splitted[1]]))
         create_folder_if_not(new_path)
         shutil.copyfile(file, new_path)
 
 
 if __name__ == '__main__':
-    files = get_all_files(".", ".*\.(json|xml)$")
+    files = get_all_files(".", ".*\.(json|xml|xlsx)$")
     create_archiv(files)
